@@ -1,7 +1,6 @@
 version: '2'
 
 services:
-
   redis:
     image: redis:3.2.8-alpine
     container_name: redis
@@ -46,28 +45,3 @@ services:
       - nodejs2
 
 
-  consul1:
-    image: "consul:0.8.3"
-    command: "agent -server -bootstrap-expect 3"
-
-  consul2:
-    image: "consul:0.8.3"
-    command: "agent -server -disable-host-node-id -join consul1"
-    depends_on:
-      - consul1
-
-  consul3:
-    image: "consul:0.8.3"
-    command: "agent -server -disable-host-node-id -join consul1"
-    depends_on:
-      - consul1
-
-  consul4:
-    image: "consul:0.8.3"
-    command: "agent -disable-host-node-id -client 0.0.0.0 -ui -join consul1"
-    ports:
-      - "8400:8400"
-      - "8500:8500"
-      - "8600:53"
-    depends_on:
-      - consul1

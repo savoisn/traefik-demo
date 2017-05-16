@@ -9,12 +9,12 @@ var client = redis.createClient(6379, "redis");
 
 var ifaces = os.networkInterfaces();
 console.log(ifaces)
-ip = ifaces["eth0"][0].address
+ip = ifaces['eth0'][0].address
 
 console.log(ip)
 
 client.on('error', function (err) {
-    console.log("Error " + err);
+    console.log('Error ' + err);
 });
 
 app.get('/api/:username', function(req, res) {
@@ -26,7 +26,43 @@ app.get('/api/:username', function(req, res) {
   // username from our redis cache
   client.get(username, function(error, result) {
     // the result exists in our cache - return it to our user immediately
-    res.send({ "username": username, "hello": "it seems to work", "hostname":os.hostname(), 'ip': ip});
+    res.send({ 'username': username, 'hello': 'it seems to work', 'hostname':os.hostname(), 'ip': ip});
+  });
+});
+
+app.get('/', function(req, res) {
+  // get the username parameter in the URL
+  // i.e.: username = "coligo-io" in http://localhost:5000/api/coligo-io
+
+  // use the redis client to get the total number of stars associated to that
+  // username from our redis cache
+  client.get(function(error, result) {
+    // the result exists in our cache - return it to our user immediately
+    console.log("ici");
+    res.send({'root': true,'hostname': os.hostname(), 'ip': ip});
+  });
+});
+
+app.get('/test', function(req, res) {
+  // get the username parameter in the URL
+  // i.e.: username = "coligo-io" in http://localhost:5000/api/coligo-io
+
+  // use the redis client to get the total number of stars associated to that
+  // username from our redis cache
+  client.get(function(error, result) {
+    // the result exists in our cache - return it to our user immediately
+    res.send({'test':true,'hostname': os.hostname(), 'ip': ip});
+  });
+});
+app.get('/whoami', function(req, res) {
+  // get the username parameter in the URL
+  // i.e.: username = "coligo-io" in http://localhost:5000/api/coligo-io
+
+  // use the redis client to get the total number of stars associated to that
+  // username from our redis cache
+  client.get(function(error, result) {
+    // the result exists in our cache - return it to our user immediately
+    res.send({'hostname': os.hostname(), 'ip': ip});
   });
 });
 
