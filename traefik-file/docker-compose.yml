@@ -1,7 +1,6 @@
 version: '2'
 
 services:
-
   redis:
     image: redis:3.2.8-alpine
     container_name: redis
@@ -9,15 +8,20 @@ services:
   nodejs:
     image: node:6.10.2-alpine
     volumes:
-      - './webapp/:/code'
+      - ./cert:/cert
+      - './node-webapp/:/code'
     command: "node /code/server.js"
     links:
       - redis
     
   nodejs1:
     image: node:6.10.2-alpine
+    ports:
+      - "3456:3456"
+      - "4567:4567"
     volumes:
-      - './webapp/:/code'
+      - ./cert:/cert
+      - './node-webapp/:/code'
     command: "node /code/server.js"
     links:
       - redis
@@ -25,16 +29,18 @@ services:
   nodejs2:
     image: node:6.10.2-alpine
     volumes:
-      - './webapp/:/code'
+      - ./cert:/cert
+      - './node-webapp/:/code'
     command: "node /code/server.js"
     links:
       - redis
 
   proxy:
-    image: traefik:raclette-alpine
+    image: traefik:morbier-alpine
     command: --logLevel=DEBUG
     ports:
       - "80:80"
+      - "443:443"
       - "8080:8080"
       - "8081:8081"
     volumes:
@@ -46,28 +52,3 @@ services:
       - nodejs2
 
 
-  consul1:
-    image: "consul:0.8.3"
-    command: "agent -server -bootstrap-expect 3"
-
-  consul2:
-    image: "consul:0.8.3"
-    command: "agent -server -disable-host-node-id -join consul1"
-    depends_on:
-      - consul1
-
-  consul3:
-    image: "consul:0.8.3"
-    command: "agent -server -disable-host-node-id -join consul1"
-    depends_on:
-      - consul1
-
-  consul4:
-    image: "consul:0.8.3"
-    command: "agent -disable-host-node-id -client 0.0.0.0 -ui -join consul1"
-    ports:
-      - "8400:8400"
-      - "8500:8500"
-      - "8600:53"
-    depends_on:
-      - consul1

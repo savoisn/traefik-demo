@@ -1,0 +1,24 @@
+defaultEntryPoints = ["http","https"]
+accessLogsFile = "/access.log"
+
+logLevel = "DEBUG"
+
+InsecureSkipVerify = true
+
+[web]
+address = ":8081"
+
+[file]
+watch = true
+filename = "/rules.toml"
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+      [[entryPoints.https.tls.certificates]]
+        certFile = "/cert/domain.csr"
+        keyFile = "/cert/domain.key"
+

@@ -1,0 +1,25 @@
+defaultEntryPoints = ["http", "https"]
+accessLogsFile = "/access.log"
+
+
+[web]
+address = ":8081"
+
+[consulCatalog]
+endpoint = "consul4:8500"
+domain = "service.consul"
+prefix = "traefik"
+
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+      [[entryPoints.https.tls.certificates]]
+        certFile = "/cert/domain.csr"
+        keyFile = "/cert/domain.key"
+
