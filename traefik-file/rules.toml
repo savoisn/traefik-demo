@@ -8,11 +8,10 @@
   [backends.backend1]
     [backends.backend1.LoadBalancer]
       method = "wrr"
+    [backends.backend1.healthcheck]
+      path = "health"
+      interval = "10s"
     [backends.backend1.servers.server1]
       url = "http://nodejs1:3456/"
     [backends.backend1.servers.server2]
       url = "http://nodejs2:3456/"
-    [backends.backend1.servers.server3]
-      url = "https://nodejs1:4567/"
-    [backends.backend1.servers.server4]
-      url = "https://nodejs2:4567/"

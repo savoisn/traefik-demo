@@ -58,6 +58,9 @@ app.get('/', function(req, res) {
 app.get('/test', function(req, res) {
   res.send({'root': true,'hostname': os.hostname(), 'ip': ip, 'protocol': req.protocol});
 });
+app.get('/health', function(req, res) {
+  res.send({'status': 'ok'});
+});
 app.get('/whoami', function(req, res) {
   res.send({'root': true,'hostname': os.hostname(), 'ip': ip, 'protocol': req.protocol});
 });
